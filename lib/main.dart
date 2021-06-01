@@ -56,17 +56,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   TextStyle textStyleCalculoDisplay = const TextStyle(
     color: Colors.grey,
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: FontWeight.w900,
   );
 
   TextStyle textStyleResultadoDisplay = const TextStyle(
     color: Colors.white,
-    fontSize: 30,
+    fontSize: 40,
     fontWeight: FontWeight.w900,
   );
   
   String calculoDisplay = "";
+  bool novoCalculo = true;
+  String resultado = "200";
 
   @override
   Widget build(BuildContext context) {
@@ -85,13 +87,17 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                      calculoDisplay,
-                      style: textStyleCalculoDisplay,
+
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                        calculoDisplay,
+                        style: textStyleCalculoDisplay,
+                    ),
                   ),
 
                   Text(
-                    "20.10",
+                    "123.90",
                     style: textStyleResultadoDisplay,
                   ),
                 ],
@@ -100,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Expanded(
             child: Container(
-              //padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.only(top: 10),
               width: MediaQuery.of(context).size.width,
               color: const Color.fromRGBO(27, 27, 27, 1),
               child: SafeArea(
@@ -159,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("00"),
                                 style: buttonStyle,
                                 child: Text(
                                   "00",
@@ -285,9 +291,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("."),
                                 style: buttonStyle,
-                                child: Text("", style: textStyle,)
+                                child: Text(
+                                  ".",
+                                  style: textStyle,
+                                )
                             ),
                           ),
 
@@ -301,7 +310,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _addValor("/"),
+                                onPressed: () => calculoDisplay.isNotEmpty ? _addOperador("/") : "",
                                 style: buttonStyle,
                                 child: Text(
                                   "/",
@@ -312,7 +321,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _addValor("*"),
+                                onPressed: () => calculoDisplay.isNotEmpty ?  _addOperador("*") : "",
                                 style: buttonStyle,
                                 child: Text(
                                   "*",
@@ -323,7 +332,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _addValor("+"),
+                                onPressed: () => calculoDisplay.isNotEmpty ?  _addOperador("+") : "",
                                 style: buttonStyle,
                                 child: Text(
                                   "+",
@@ -334,7 +343,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _addValor("-"),
+                                onPressed: () => calculoDisplay.isNotEmpty ?  _addOperador("-") : "",
                                 style: buttonStyle,
                                 child: Text(
                                   "-", style: textStyleBasic,
@@ -344,7 +353,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _calcular(),
                                 style: buttonStyleEquals,
                                 child: Text(
                                   "=",
@@ -368,16 +377,47 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _addValor(String valor) {
-    print("add");
     setState(() {
       calculoDisplay += valor.toString();
     });
-    print(calculoDisplay);
+    novoCalculo = false;
+  }
+  _addOperador(String operador){
+
+    if(novoCalculo) {
+      calculoDisplay = resultado;
+      novoCalculo = false;
+    }
+
+    if(!isNumero(calculoDisplay[calculoDisplay.length - 1].toString())) {
+      calculoDisplay = removerUltimoChar(calculoDisplay);
+    }
+
+    setState(() {
+      calculoDisplay += operador;
+    });
+  }
+
+
+  bool isNumero(String num) {
+    return double.tryParse(num) == null ? false : true;
+  }
+  bool isOperador(String num) {
+    return double.tryParse(num) == null ? false : true;
+  }
+  String removerUltimoChar(String text){
+    List<String> stringList = text.split("");
+    stringList.removeLast();
+    return stringList.join();
   }
 
   _limpar() {
     setState(() {
       calculoDisplay = "";
     });
+  }
+
+  _calcular() {
+    novoCalculo = true;
   }
 }
