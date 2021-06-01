@@ -54,6 +54,20 @@ class _MyHomePageState extends State<MyHomePage> {
     fontWeight: FontWeight.w900,
   );
 
+  TextStyle textStyleCalculoDisplay = const TextStyle(
+    color: Colors.grey,
+    fontSize: 22,
+    fontWeight: FontWeight.w900,
+  );
+
+  TextStyle textStyleResultadoDisplay = const TextStyle(
+    color: Colors.white,
+    fontSize: 30,
+    fontWeight: FontWeight.w900,
+  );
+  
+  String calculoDisplay = "";
+
   @override
   Widget build(BuildContext context) {
 
@@ -64,15 +78,31 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height / 3.5,
+            height: MediaQuery.of(context).size.height / 3,
             width: MediaQuery.of(context).size.width,
-            color: Colors.black,
+            color: const Color.fromRGBO(22, 22, 22, 1),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                      calculoDisplay,
+                      style: textStyleCalculoDisplay,
+                  ),
+
+                  Text(
+                    "20.10",
+                    style: textStyleResultadoDisplay,
+                  ),
+                ],
+              ),
+            ),
           ),
           Expanded(
             child: Container(
               //padding: const EdgeInsets.all(15),
               width: MediaQuery.of(context).size.width,
-              color: const Color.fromRGBO(40, 40, 40, 1),
+              color: const Color.fromRGBO(27, 27, 27, 1),
               child: SafeArea(
                 top: false,
                 child: Row(
@@ -86,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _limpar(),
                                 style: buttonStyle,
                                 child: Text("C",
                                   style: textStyle,
@@ -96,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("7"),
                                 style: buttonStyle,
                                 child: Text(
                                   "7",
@@ -107,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("4"),
                                 style: buttonStyle,
                                 child: Text(
                                   "4",
@@ -118,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("1"),
                                 style: buttonStyle,
                                 child: Text(
                                   "1",
@@ -160,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("8"),
                                 style: buttonStyle,
                                 child: Text(
                                   "8",
@@ -171,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("5"),
                                 style: buttonStyle,
                                 child: Text(
                                   "5",
@@ -182,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("2"),
                                 style: buttonStyle,
                                 child: Text(
                                   "2",
@@ -193,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("0"),
                                 style: buttonStyle,
                                 child: Text(
                                   "0",
@@ -222,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("9"),
                                 style: buttonStyle,
                                 child: Text(
                                   "9",
@@ -233,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("6"),
                                 style: buttonStyle,
                                 child: Text(
                                   "6",
@@ -244,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("3"),
                                 style: buttonStyle,
                                 child: Text(
                                   "3",
@@ -271,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("/"),
                                 style: buttonStyle,
                                 child: Text(
                                   "/",
@@ -282,10 +312,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("*"),
                                 style: buttonStyle,
                                 child: Text(
-                                  "X",
+                                  "*",
                                   style: textStyleBasic,
                                 )
                             ),
@@ -293,7 +323,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("+"),
                                 style: buttonStyle,
                                 child: Text(
                                   "+",
@@ -304,7 +334,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _addValor("-"),
                                 style: buttonStyle,
                                 child: Text(
                                   "-", style: textStyleBasic,
@@ -335,5 +365,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  _addValor(String valor) {
+    print("add");
+    setState(() {
+      calculoDisplay += valor.toString();
+    });
+    print(calculoDisplay);
+  }
+
+  _limpar() {
+    setState(() {
+      calculoDisplay = "";
+    });
   }
 }
