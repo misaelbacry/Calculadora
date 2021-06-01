@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 void main() {
@@ -10,7 +11,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.blue, // navigation bar color
+      statusBarColor: Colors.pink, // status bar color
+      statusBarBrightness: Brightness.dark,//status bar brigtness
+      statusBarIconBrightness:Brightness.dark , //status barIcon Brightness
+      systemNavigationBarDividerColor: Colors.greenAccent,//Navigation bar divider color
+      systemNavigationBarIconBrightness: Brightness.dark, //navigation bar icon
+    ));
     return MaterialApp(
+
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -73,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
@@ -98,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
+                    padding: const EdgeInsets.only(right: 20, left: 20, top: 15),
                     child: Text(
                       resultadoDisplay,
                       style: textStyleResultadoDisplay,
@@ -126,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _limparAll(),
+                                onPressed: () => _limparUltimo(),
                                 style: buttonStyle,
                                 child: Text("C",
                                   style: textStyle,
@@ -189,10 +200,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => calculoDisplay.isNotEmpty ? _mudarSinal() : "",
+                                onPressed: () => _limparAll(),
                                 style: buttonStyle,
                                 child: Text(
-                                  "+/-",
+                                  "DEL",
                                   style: textStyle,
                                 )
                             ),
@@ -431,6 +442,13 @@ class _MyHomePageState extends State<MyHomePage> {
       resultadoDisplay = "0";
     });
   }
+
+  _limparUltimo() {
+    calculoDisplay = removerUltimoChar(calculoDisplay);
+    _limparResultado();
+    print(calculoDisplay);
+  }
+
   _limparResultado(){
     setState(() {
       resultadoDisplay = "0";
@@ -454,7 +472,6 @@ class _MyHomePageState extends State<MyHomePage> {
   _mudarSinal() {
     if(calculoDisplay.startsWith("-")) {
       calculoDisplay = removerPrimeiroChar(calculoDisplay);
-      _calcularOperacao();
     } else {
       calculoDisplay = "-($calculoDisplay)";
     }
@@ -463,7 +480,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _calculaPorc(){
     _calcularOperacao();
-    resultadoDisplay = (double.parse(calculoDisplay) / 100).toString();
+    calculoDisplay = "($calculoDisplay) / 100";
+    resultadoDisplay = (double.parse(resultadoDisplay) / 100).toString();
     novoCalculo = true;
     setState(() {});
   }
