@@ -63,13 +63,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   TextStyle textStyleResultadoDisplay = const TextStyle(
     color: Colors.white,
-    fontSize: 40,
+    fontSize: 35,
     fontWeight: FontWeight.w900,
   );
   
   String calculoDisplay = "";
   bool novoCalculo = true;
-  String resultadoDisplay = "";
+  String resultadoDisplay = "0";
 
   @override
   Widget build(BuildContext context) {
@@ -90,16 +90,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
 
                   Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.only(right: 20, left: 20, top: 0),
                     child: Text(
                         calculoDisplay,
                         style: textStyleCalculoDisplay,
                     ),
                   ),
 
-                  Text(
-                    resultadoDisplay,
-                    style: textStyleResultadoDisplay,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
+                    child: Text(
+                      resultadoDisplay,
+                      style: textStyleResultadoDisplay,
+                    ),
                   ),
                 ],
               ),
@@ -186,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => calculoDisplay.isNotEmpty ? _mudarSinal() : "",
                                 style: buttonStyle,
                                 child: Text(
                                   "+/-",
@@ -248,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => print("11"),
+                                onPressed: () => _calculaPorc(),
                                 style: buttonStyle,
                                 child: Text(
                                   "%",
@@ -354,7 +357,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _calcular(),
+                                onPressed: () => _calcularOperacao(),
                                 style: buttonStyleEquals,
                                 child: Text(
                                   "=",
@@ -391,7 +394,8 @@ class _MyHomePageState extends State<MyHomePage> {
       novoCalculo = false;
     }
 
-    if(!isNumero(calculoDisplay[calculoDisplay.length - 1].toString())) {
+    if(!isNumero(calculoDisplay[calculoDisplay.length - 1].toString()) &&
+        isOperador(calculoDisplay[calculoDisplay.length - 1].toString())) {
       calculoDisplay = removerUltimoChar(calculoDisplay);
     }
 
@@ -404,12 +408,20 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isNumero(String num) {
     return double.tryParse(num) == null ? false : true;
   }
-  bool isOperador(String num) {
-    return double.tryParse(num) == null ? false : true;
+  bool isOperador(String operador) {
+    return operador == "-" || operador == "+" || operador == "/" || operador == "*";
+  }
+  bool isOperacao(String operacao) {
+    return operacao.contains("-") || operacao.contains("+") || operacao.contains("/") || operacao.contains("*");
   }
   String removerUltimoChar(String text){
     List<String> stringList = text.split("");
     stringList.removeLast();
+    return stringList.join();
+  }
+  String removerPrimeiroChar(String text){
+    List<String> stringList = text.split("");
+    stringList.removeAt(0);
     return stringList.join();
   }
 
@@ -425,13 +437,35 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  _calcular() {
-    Parser p = Parser();
-    Expression exp = p.parse(calculoDisplay);
-    ContextModel cm = ContextModel();
-    double eval = exp.evaluate(EvaluationType.VECTOR, cm);
-    resultadoDisplay = eval.toString();
+  _calcularOperacao() {
+    if(!isOperacao(calculoDisplay)) {
+      resultadoDisplay = calculoDisplay;
+    }else{
+      Parser p = Parser();
+      Expression exp = p.parse(calculoDisplay);
+      ContextModel cm = ContextModel();
+      resultadoDisplay = exp.evaluate(EvaluationType.VECTOR, cm).toString();
+      novoCalculo = true;
+    }
+
+    setState(() {});
+  }
+
+  _mudarSinal() {
+    if(calculoDisplay.startsWith("-")) {
+      calculoDisplay = removerPrimeiroChar(calculoDisplay);
+      _calcularOperacao();
+    } else {
+      calculoDisplay = "-($calculoDisplay)";
+    }
+    setState(() {});
+  }
+
+  _calculaPorc(){
+    _calcularOperacao();
+    resultadoDisplay = (double.parse(calculoDisplay) / 100).toString();
     novoCalculo = true;
     setState(() {});
   }
+
 }
