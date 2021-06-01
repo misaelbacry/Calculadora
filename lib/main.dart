@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   
   String calculoDisplay = "";
   bool novoCalculo = true;
-  String resultado = "200";
+  String resultadoDisplay = "";
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
 
                   Text(
-                    "123.90",
+                    resultadoDisplay,
                     style: textStyleResultadoDisplay,
                   ),
                 ],
@@ -122,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _limpar(),
+                                onPressed: () => _limparAll(),
                                 style: buttonStyle,
                                 child: Text("C",
                                   style: textStyle,
@@ -385,7 +386,8 @@ class _MyHomePageState extends State<MyHomePage> {
   _addOperador(String operador){
 
     if(novoCalculo) {
-      calculoDisplay = resultado;
+      calculoDisplay = resultadoDisplay;
+      _limparResultado();
       novoCalculo = false;
     }
 
@@ -411,13 +413,25 @@ class _MyHomePageState extends State<MyHomePage> {
     return stringList.join();
   }
 
-  _limpar() {
+  _limparAll() {
     setState(() {
       calculoDisplay = "";
+      resultadoDisplay = "0";
+    });
+  }
+  _limparResultado(){
+    setState(() {
+      resultadoDisplay = "0";
     });
   }
 
   _calcular() {
+    Parser p = Parser();
+    Expression exp = p.parse(calculoDisplay);
+    ContextModel cm = ContextModel();
+    double eval = exp.evaluate(EvaluationType.VECTOR, cm);
+    resultadoDisplay = eval.toString();
     novoCalculo = true;
+    setState(() {});
   }
 }
