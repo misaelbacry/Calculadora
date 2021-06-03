@@ -104,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.only(right: 20, left: 20, top: 0),
                     child: Text(
                         calculoDisplay,
+                        textAlign: TextAlign.center,
                         style: textStyleCalculoDisplay,
                     ),
                   ),
@@ -112,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.only(right: 20, left: 20, top: 15),
                     child: Text(
                       resultadoDisplay,
+                      textAlign: TextAlign.center,
                       style: textStyleResultadoDisplay,
                     ),
                   ),
@@ -130,6 +132,139 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+
+
+                    Visibility(
+                      visible: false,
+                      child: Expanded(
+                        child: Column(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _limparUltimo(),
+                                  style: buttonStyle,
+                                  child: Text("(",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("1/x"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "1/x",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("x!"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "x!",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("1"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "Pi",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("00"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "00",
+                                    style: textStyle,
+                                    textAlign: TextAlign.center,
+                                  )
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Visibility(
+                      visible: false,
+                      child: Expanded(
+                        child: Column(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _limparUltimo(),
+                                  style: buttonStyle,
+                                  child: Text(")",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("X2"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "x2",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("4"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "x3",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("1"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "xy",
+                                    style: textStyle,
+                                  )
+                              ),
+                            ),
+
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => _addValor("00"),
+                                  style: buttonStyle,
+                                  child: Text(
+                                    "00",
+                                    style: textStyle,
+                                    textAlign: TextAlign.center,
+                                  )
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
 
                     Expanded(
                       child: Column(
@@ -262,7 +397,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => _calculaPorc(),
+                                onPressed: () => calculoDisplay.isNotEmpty ? _calculaPorc() : "",
                                 style: buttonStyle,
                                 child: Text(
                                   "%",
@@ -358,7 +493,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () => calculoDisplay.isNotEmpty ?  _addOperador("-") : "",
+                                onPressed: () => _addOperador("-"),
                                 style: buttonStyle,
                                 child: Text(
                                   "-", style: textStyleBasic,
@@ -405,9 +540,11 @@ class _MyHomePageState extends State<MyHomePage> {
       novoCalculo = false;
     }
 
-    if(!isNumero(calculoDisplay[calculoDisplay.length - 1].toString()) &&
-        isOperador(calculoDisplay[calculoDisplay.length - 1].toString())) {
-      calculoDisplay = removerUltimoChar(calculoDisplay);
+    if(calculoDisplay.isNotEmpty){
+      if(!isNumero(calculoDisplay[calculoDisplay.length - 1].toString()) &&
+          isOperador(calculoDisplay[calculoDisplay.length - 1].toString())) {
+        calculoDisplay = removerUltimoChar(calculoDisplay);
+      }
     }
 
     setState(() {
@@ -444,9 +581,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _limparUltimo() {
+    if(calculoDisplay.isEmpty) {
+      return;
+    }
     calculoDisplay = removerUltimoChar(calculoDisplay);
     _limparResultado();
-    print(calculoDisplay);
   }
 
   _limparResultado(){
@@ -465,7 +604,6 @@ class _MyHomePageState extends State<MyHomePage> {
       resultadoDisplay = exp.evaluate(EvaluationType.VECTOR, cm).toString();
       novoCalculo = true;
     }
-
     setState(() {});
   }
 
